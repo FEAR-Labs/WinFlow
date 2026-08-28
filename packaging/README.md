@@ -19,7 +19,7 @@ La versión standalone usada en GitHub conserva el flujo actual.
 
 - Windows 10/11 x64.
 - .NET SDK compatible con `net10.0-windows`.
-- Windows 10/11 SDK, porque el script utiliza `MakeAppx.exe`.
+- Windows 10/11 SDK, porque los scripts utilizan `MakeAppx.exe` y `SignTool.exe`.
 - PowerShell.
 
 ## Identidad de Microsoft Store
@@ -66,24 +66,41 @@ El script:
 
 `msix-staging/`, `msix-output/` y `packaging/Assets/` están ignorados por Git.
 
-## Firma y pruebas
+## Firma local de prueba
 
-Para publicar mediante Microsoft Store no necesitas comprar un certificado de firma CA: Microsoft Store firma el MSIX después de la certificación.
+El MSIX destinado a Partner Center queda sin firma local. Para instalar y probar una copia antes de enviarla a Microsoft Store, ejecuta desde la raíz del repositorio:
 
-Para probar localmente un paquete antes de Store, puedes firmarlo con un certificado de prueba confiado en tu equipo o utilizar un flujo de desarrollo compatible con paquetes sin firma en Windows 11.
+```powershell
+powershell -ExecutionPolicy Bypass -File .\packaging\SignMsixForTesting.ps1
+```
 
-Antes de enviar la primera versión:
+El script:
 
-1. instala y prueba el MSIX;
-2. comprueba `Alt+C` y `Alt+V`;
-3. comprueba el icono de bandeja;
-4. reinicia sesión y verifica el startup task;
-5. comprueba la desinstalación desde Configuración;
-6. ejecuta Windows App Certification Kit;
-7. sube el `.msix` a Partner Center.
+1. busca o crea un certificado autofirmado de prueba cuyo `Subject` coincide exactamente con el `Publisher` del paquete;
+2. exporta solo el certificado público a `msix-output/WinFlow-Test.cer`;
+3. solicita elevación de administrador para confiar ese certificado en `LocalMachine\TrustedPeople`;
+4. copia el MSIX original a `msix-output/WinFlow_<version>_x64-test.msix`;
+5. firma únicamente esa copia con `SignTool.exe`.
+
+No se exporta ninguna clave privada al repositorio ni a `msix-output`. El certificado con clave privada permanece en `Cert:\CurrentUser\My` del PC de desarrollo. El archivo `WinFlow_<version>_x64.msix` original permanece intacto para Partner Center.
+
+El certificado autofirmado es exclusivamente para pruebas locales. Microsoft Store firma el paquete de distribución después de la certificación.
+
+## Pruebas antes de enviar
+
+1. genera el MSIX con `BuildMsix.ps1`;
+2. genera la copia firmada con `SignMsixForTesting.ps1`;
+3. instala `WinFlow_<version>_x64-test.msix`;
+4. comprueba `Alt+C` y `Alt+V`;
+5. comprueba el icono de bandeja;
+6. reinicia sesión y verifica el startup task;
+7. comprueba la desinstalación desde Configuración;
+8. ejecuta Windows App Certification Kit;
+9. sube el MSIX original sin firma local a Partner Center.
 
 ## Archivos
 
 - `Package.appxmanifest.template`: manifest base para Microsoft Store.
 - `GenerateAssets.ps1`: genera los iconos requeridos por MSIX.
 - `BuildMsix.ps1`: compila y empaqueta WinFlow.
+- `SignMsixForTesting.ps1`: crea una copia firmada y confiable solo para pruebas locales.
