@@ -3,9 +3,9 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
-  xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap uap10 desktop6 rescap">
+  IgnorableNamespaces="uap uap10 desktop rescap">
 
   <!-- Replace Identity Name and Publisher with the exact values from Partner Center. -->
   <Identity
@@ -17,6 +17,7 @@
   <Properties>
     <DisplayName>WinFlow</DisplayName>
     <PublisherDisplayName>FEAR-Labs</PublisherDisplayName>
+    <Description>Controla tus ventanas de forma rápida y simple.</Description>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -41,7 +42,6 @@
       uap10:TrustLevel="mediumIL">
 
       <uap:VisualElements
-        AppListEntry="none"
         DisplayName="WinFlow"
         Description="Controla tus ventanas de forma rápida y simple."
         BackgroundColor="transparent"
@@ -53,15 +53,15 @@
       </uap:VisualElements>
 
       <Extensions>
-        <desktop6:Extension
+        <desktop:Extension
           Category="windows.startupTask"
           Executable="WinFlow.exe"
           EntryPoint="Windows.FullTrustApplication">
-          <desktop6:StartupTask
+          <desktop:StartupTask
             TaskId="WinFlowStartup"
             Enabled="true"
             DisplayName="WinFlow" />
-        </desktop6:Extension>
+        </desktop:Extension>
       </Extensions>
     </Application>
   </Applications>
