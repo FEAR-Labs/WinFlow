@@ -1,0 +1,7 @@
+bin/
+obj/
+artifact/
+artifact-arm64/
+.vs/
+*.user
+*.suo
