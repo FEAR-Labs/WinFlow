@@ -2,6 +2,9 @@ bin/
 obj/
 artifact/
 artifact-arm64/
+msix-staging/
+msix-output/
+packaging/Assets/
 .vs/
 *.user
 *.suo
