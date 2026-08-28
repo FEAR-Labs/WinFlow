@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap10 desktop6 rescap">
+
+  <!-- Replace Identity Name and Publisher with the exact values from Partner Center. -->
+  <Identity
+    Name="__PACKAGE_IDENTITY_NAME__"
+    Publisher="__PACKAGE_PUBLISHER__"
+    Version="1.0.0.0"
+    ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>WinFlow</DisplayName>
+    <PublisherDisplayName>FEAR-Labs</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily
+      Name="Windows.Desktop"
+      MinVersion="10.0.19041.0"
+      MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="es" />
+    <Resource Language="en" />
+  </Resources>
+
+  <Applications>
+    <Application
+      Id="WinFlow"
+      Executable="WinFlow.exe"
+      EntryPoint="Windows.FullTrustApplication"
+      uap10:RuntimeBehavior="packagedClassicApp"
+      uap10:TrustLevel="mediumIL">
+
+      <uap:VisualElements
+        AppListEntry="none"
+        DisplayName="WinFlow"
+        Description="Controla tus ventanas de forma rápida y simple."
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile
+          Wide310x150Logo="Assets\Wide310x150Logo.png"
+          Square310x310Logo="Assets\Square310x310Logo.png" />
+      </uap:VisualElements>
+
+      <Extensions>
+        <desktop6:Extension
+          Category="windows.startupTask"
+          Executable="WinFlow.exe"
+          EntryPoint="Windows.FullTrustApplication">
+          <desktop6:StartupTask
+            TaskId="WinFlowStartup"
+            Enabled="true"
+            DisplayName="WinFlow" />
+        </desktop6:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>
