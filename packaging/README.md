@@ -24,12 +24,12 @@ La versión standalone usada en GitHub conserva el flujo actual.
 
 ## Identidad de Microsoft Store
 
-Antes de generar el paquete final, reserva `WinFlow` en Partner Center y copia exactamente:
+La identidad reservada para WinFlow en Partner Center es:
 
-- **Package/Identity/Name**
-- **Package/Identity/Publisher**
+- **Package/Identity/Name:** `FEAR-Labs.WinFlow`
+- **Package/Identity/Publisher:** `CN=EFE2FF1A-8478-41FD-A0B3-9DBE8DFE43B1`
 
-No inventes estos valores. Deben coincidir con la identidad asignada por Microsoft Store.
+Estos valores ya están integrados en el manifest y son los valores por defecto de `BuildMsix.ps1`.
 
 ## Generar los assets
 
@@ -46,15 +46,13 @@ Los archivos se generan en `packaging/Assets/` y están ignorados por Git.
 Desde la raíz del repositorio, ejecuta:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\packaging\BuildMsix.ps1 `
-  -IdentityName "VALOR_DE_PARTNER_CENTER" `
-  -Publisher "VALOR_DE_PARTNER_CENTER"
+powershell -ExecutionPolicy Bypass -File .\packaging\BuildMsix.ps1
 ```
 
 Opcionalmente puedes indicar una versión MSIX de cuatro componentes:
 
 ```powershell
--Version "1.0.0.0"
+powershell -ExecutionPolicy Bypass -File .\packaging\BuildMsix.ps1 -Version "1.0.0.0"
 ```
 
 El script:
@@ -62,7 +60,7 @@ El script:
 1. genera los assets;
 2. publica WinFlow self-contained para `win-x64`;
 3. crea una carpeta temporal de staging;
-4. genera `AppxManifest.xml` usando la identidad real;
+4. genera `AppxManifest.xml` con la identidad de Microsoft Store;
 5. localiza `MakeAppx.exe` dentro de Windows SDK;
 6. produce `msix-output/WinFlow_<version>_x64.msix`.
 
