@@ -14,11 +14,22 @@ public partial class App : System.Windows.Application
     {
         base.OnStartup(e);
         ShutdownMode = System.Windows.ShutdownMode.OnExplicitShutdown;
-        if (UninstallManager.IsWorkerRequest(e.Args)) { _ = RunUninstallWorkerAsync(e.Args); return; }
-        if (UninstallManager.IsUninstallRequest(e.Args)) { UninstallManager.StartWorker(); Shutdown(); return; }
+
+        bool isPackaged = PackageContext.IsPackaged;
+        if (!isPackaged)
+        {
+            if (UninstallManager.IsWorkerRequest(e.Args)) { _ = RunUninstallWorkerAsync(e.Args); return; }
+            if (UninstallManager.IsUninstallRequest(e.Args)) { UninstallManager.StartWorker(); Shutdown(); return; }
+        }
+
         _instanceMutex = new Mutex(false, @"Local\WinFlow.SingleInstance");
         if (!AcquireInstance()) { Shutdown(); return; }
         _tray = new TrayController();
+
+        // MSIX/Store owns installation, updates, startup registration and removal.
+        // The packaged build must never run WinFlow's standalone installer flow.
+        if (isPackaged) return;
+
         if (!InstallManager.IsRunningFromInstalledLocation())
         {
             ShowProgress(5, "Preparando instalación…", "WinFlow seguirá funcionando mientras se instala.");
