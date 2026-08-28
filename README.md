@@ -79,3 +79,4 @@ No modifica archivos del sistema ni la configuración de tus monitores. Las vent
 ## Limitaciones
 
 - Algunas aplicaciones o ventanas protegidas pueden impedir que herramientas externas cambien su posición o estado.
+- Microsoft Smart App Control puede bloquear la versión actual de WinFlow o mostrar una advertencia indicando que no se puede verificar el editor. En algunos equipos, iniciar WinFlow mediante **“Ejecutar como administrador”** puede permitir que la aplicación se ejecute, aunque esto depende de la configuración y las políticas de seguridad de Windows. Estamos trabajando en una **versión de WinFlow para Microsoft Store**, con el objetivo de ofrecer una instalación más sencilla y correctamente distribuida a través de Microsoft, reduciendo este tipo de advertencias o bloqueos.
