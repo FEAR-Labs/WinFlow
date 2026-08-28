@@ -1,10 +1,6 @@
 param(
-    [Parameter(Mandatory = $true)]
-    [string]$IdentityName,
-
-    [Parameter(Mandatory = $true)]
-    [string]$Publisher,
-
+    [string]$IdentityName = "FEAR-Labs.WinFlow",
+    [string]$Publisher = "CN=EFE2FF1A-8478-41FD-A0B3-9DBE8DFE43B1",
     [string]$Version = "1.0.0.0",
     [ValidateSet("win-x64")]
     [string]$Runtime = "win-x64"
@@ -42,10 +38,6 @@ function Find-WindowsSdkTool {
     return $candidate
 }
 
-if ($IdentityName -match "__" -or $Publisher -match "__") {
-    throw "Usa los valores reales de Package Identity Name y Publisher de Partner Center."
-}
-
 if ($Version -notmatch '^\d+\.\d+\.\d+\.\d+$') {
     throw "La versión MSIX debe tener cuatro números, por ejemplo 1.0.0.0."
 }
@@ -76,8 +68,8 @@ Remove-Item $publish -Recurse -Force
 Copy-Item $assets (Join-Path $staging "Assets") -Recurse -Force
 
 $manifestContent = Get-Content $template -Raw
-$manifestContent = $manifestContent.Replace("__PACKAGE_IDENTITY_NAME__", $IdentityName)
-$manifestContent = $manifestContent.Replace("__PACKAGE_PUBLISHER__", $Publisher)
+$manifestContent = $manifestContent.Replace('Name="FEAR-Labs.WinFlow"', ('Name="' + $IdentityName + '"'))
+$manifestContent = $manifestContent.Replace('Publisher="CN=EFE2FF1A-8478-41FD-A0B3-9DBE8DFE43B1"', ('Publisher="' + $Publisher + '"'))
 $manifestContent = $manifestContent.Replace('Version="1.0.0.0"', ('Version="' + $Version + '"'))
 Set-Content -Path $manifest -Value $manifestContent -Encoding utf8
 
