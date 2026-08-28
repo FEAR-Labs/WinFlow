@@ -16,8 +16,88 @@ if (-not (Test-Path $source)) {
 
 New-Item -ItemType Directory -Force -Path $output | Out-Null
 
-$icon = New-Object System.Drawing.Icon($source)
-$sourceBitmap = $icon.ToBitmap()
+function Get-IcoBitmap {
+    param([string]$Path)
+
+    $bytes = [System.IO.File]::ReadAllBytes($Path)
+    if ($bytes.Length -lt 22) {
+        throw "El archivo ICO no es válido: $Path"
+    }
+
+    $count = [System.BitConverter]::ToUInt16($bytes, 4)
+    if ($count -lt 1) {
+        throw "El archivo ICO no contiene imágenes: $Path"
+    }
+
+    $bestOffset = 0
+    $bestLength = 0
+    $bestArea = -1
+
+    for ($i = 0; $i -lt $count; $i++) {
+        $entry = 6 + ($i * 16)
+        if (($entry + 16) -gt $bytes.Length) {
+            throw "La tabla del archivo ICO está dañada: $Path"
+        }
+
+        $width = [int]$bytes[$entry]
+        $height = [int]$bytes[$entry + 1]
+        if ($width -eq 0) { $width = 256 }
+        if ($height -eq 0) { $height = 256 }
+
+        $length = [System.BitConverter]::ToUInt32($bytes, $entry + 8)
+        $offset = [System.BitConverter]::ToUInt32($bytes, $entry + 12)
+        $area = $width * $height
+
+        if (($offset + $length) -le $bytes.Length -and $area -gt $bestArea) {
+            $bestArea = $area
+            $bestOffset = [int]$offset
+            $bestLength = [int]$length
+        }
+    }
+
+    if ($bestLength -le 0) {
+        throw "No se pudo extraer una imagen válida del ICO: $Path"
+    }
+
+    $imageBytes = New-Object byte[] $bestLength
+    [System.Array]::Copy($bytes, $bestOffset, $imageBytes, 0, $bestLength)
+
+    $isPng = $bestLength -ge 8 -and
+        $imageBytes[0] -eq 0x89 -and
+        $imageBytes[1] -eq 0x50 -and
+        $imageBytes[2] -eq 0x4E -and
+        $imageBytes[3] -eq 0x47 -and
+        $imageBytes[4] -eq 0x0D -and
+        $imageBytes[5] -eq 0x0A -and
+        $imageBytes[6] -eq 0x1A -and
+        $imageBytes[7] -eq 0x0A
+
+    if ($isPng) {
+        $stream = New-Object System.IO.MemoryStream(,$imageBytes)
+        try {
+            $image = [System.Drawing.Image]::FromStream($stream)
+            try {
+                return New-Object System.Drawing.Bitmap($image)
+            }
+            finally {
+                $image.Dispose()
+            }
+        }
+        finally {
+            $stream.Dispose()
+        }
+    }
+
+    $icon = New-Object System.Drawing.Icon($Path)
+    try {
+        return $icon.ToBitmap()
+    }
+    finally {
+        $icon.Dispose()
+    }
+}
+
+$sourceBitmap = Get-IcoBitmap $source
 
 function Save-SquareAsset {
     param(
@@ -86,7 +166,6 @@ try {
 }
 finally {
     $sourceBitmap.Dispose()
-    $icon.Dispose()
 }
 
 Write-Host "Assets MSIX generados en: $output"
