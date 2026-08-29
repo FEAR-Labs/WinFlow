@@ -13,7 +13,6 @@ internal sealed class TrayController : NativeWindow, IDisposable
 
     private readonly Dictionary<int, Action> _hotkeyHandlers = new();
     private readonly HashSet<int> _registeredIds = new();
-    private readonly System.Windows.Forms.Timer _altReleaseTimer;
     private readonly NotifyIcon _trayIcon;
     private readonly System.Drawing.Icon _icon;
     private TrayMenuWindow? _menuWindow;
@@ -23,8 +22,6 @@ internal sealed class TrayController : NativeWindow, IDisposable
     internal TrayController()
     {
         CreateHandle(new CreateParams());
-        _altReleaseTimer = new System.Windows.Forms.Timer { Interval = 20 };
-        _altReleaseTimer.Tick += (_, _) => DismissAltMenuWhenReleased();
         _icon = LoadApplicationIcon();
         _trayIcon = new NotifyIcon { Icon = _icon, Text = "WinFlow", Visible = true };
         _trayIcon.MouseUp += (_, e) => { if (e.Button == MouseButtons.Right) ShowMenu(); };
@@ -58,16 +55,8 @@ internal sealed class TrayController : NativeWindow, IDisposable
         {
             _menuWindow?.Hide();
             handler();
-            _altReleaseTimer.Start();
         }
         base.WndProc(ref message);
-    }
-
-    private void DismissAltMenuWhenReleased()
-    {
-        if ((Control.ModifierKeys & Keys.Alt) == Keys.Alt) return;
-        _altReleaseTimer.Stop();
-        try { SendKeys.SendWait("{ESC}"); } catch { }
     }
 
     private void ShowMenu()
@@ -105,7 +94,6 @@ internal sealed class TrayController : NativeWindow, IDisposable
     {
         if (_disposed || _handoffPrepared) return;
         _handoffPrepared = true;
-        _altReleaseTimer.Stop();
         _menuWindow?.Hide();
         UnregisterHotkeys();
     }
@@ -122,8 +110,6 @@ internal sealed class TrayController : NativeWindow, IDisposable
         if (_disposed) return;
         _disposed = true;
         UnregisterHotkeys();
-        _altReleaseTimer.Stop();
-        _altReleaseTimer.Dispose();
         _menuWindow?.Close();
         _trayIcon.Visible = false;
         _trayIcon.Dispose();
