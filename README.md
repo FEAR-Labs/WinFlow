@@ -14,12 +14,6 @@ Una utilidad ligera para Windows que funciona en segundo plano y permite control
 
 ---
 
-## Descarga
-
-La versión más reciente de WinFlow estará disponible en [GitHub Releases](https://github.com/FEAR-Labs/WinFlow/releases/latest).
-
-Descarga `WinFlow.exe` y ejecútalo. No necesitas un instalador adicional.
-
 ## Atajos
 
 ### Alt + C — Centrar
