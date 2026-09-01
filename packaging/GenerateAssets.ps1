@@ -15,6 +15,7 @@ if (-not (Test-Path $source)) {
 }
 
 New-Item -ItemType Directory -Force -Path $output | Out-Null
+Get-ChildItem -Path $output -Filter "*.png" -ErrorAction SilentlyContinue | Remove-Item -Force
 
 function Get-IcoBitmap {
     param([string]$Path)
@@ -147,22 +148,66 @@ function Save-WideAsset {
     }
 }
 
-try {
-    Save-SquareAsset "StoreLogo.png" 50
-    Save-SquareAsset "Square44x44Logo.png" 44
-    Save-SquareAsset "Square44x44Logo.scale-200.png" 88
-    Save-SquareAsset "Square44x44Logo.scale-400.png" 176
-    Save-SquareAsset "Square44x44Logo.targetsize-16.png" 16
-    Save-SquareAsset "Square44x44Logo.targetsize-24.png" 24
-    Save-SquareAsset "Square44x44Logo.targetsize-32.png" 32
-    Save-SquareAsset "Square44x44Logo.targetsize-48.png" 48
-    Save-SquareAsset "Square44x44Logo.targetsize-256.png" 256
+function Save-ScaledSquareAssets {
+    param(
+        [string]$BaseName,
+        [int]$BaseSize
+    )
 
-    Save-SquareAsset "Square150x150Logo.png" 150
-    Save-SquareAsset "Square150x150Logo.scale-200.png" 300
-    Save-SquareAsset "Square150x150Logo.scale-400.png" 600
-    Save-SquareAsset "Square310x310Logo.png" 310
-    Save-WideAsset "Wide310x150Logo.png" 310 150 120
+    $scales = @(
+        @{ Scale = 100; Factor = 1.0 },
+        @{ Scale = 125; Factor = 1.25 },
+        @{ Scale = 150; Factor = 1.5 },
+        @{ Scale = 200; Factor = 2.0 },
+        @{ Scale = 400; Factor = 4.0 }
+    )
+
+    foreach ($item in $scales) {
+        $size = [int][Math]::Ceiling($BaseSize * $item.Factor)
+        Save-SquareAsset "$BaseName.scale-$($item.Scale).png" $size
+    }
+}
+
+function Save-ScaledWideAssets {
+    param(
+        [string]$BaseName,
+        [int]$BaseWidth,
+        [int]$BaseHeight,
+        [int]$BaseIconSize
+    )
+
+    $scales = @(
+        @{ Scale = 100; Factor = 1.0 },
+        @{ Scale = 125; Factor = 1.25 },
+        @{ Scale = 150; Factor = 1.5 },
+        @{ Scale = 200; Factor = 2.0 },
+        @{ Scale = 400; Factor = 4.0 }
+    )
+
+    foreach ($item in $scales) {
+        $width = [int][Math]::Ceiling($BaseWidth * $item.Factor)
+        $height = [int][Math]::Ceiling($BaseHeight * $item.Factor)
+        $iconSize = [int][Math]::Ceiling($BaseIconSize * $item.Factor)
+        Save-WideAsset "$BaseName.scale-$($item.Scale).png" $width $height $iconSize
+    }
+}
+
+try {
+    # Package/Store logo. Microsoft Store requires the scale variants.
+    Save-ScaledSquareAssets "StoreLogo" 50
+
+    # App-list icon and common target-size variants used by Windows shell surfaces.
+    Save-ScaledSquareAssets "Square44x44Logo" 44
+    foreach ($size in @(16, 24, 32, 48, 256)) {
+        Save-SquareAsset "Square44x44Logo.targetsize-$size.png" $size
+        Save-SquareAsset "Square44x44Logo.targetsize-$size`_altform-unplated.png" $size
+    }
+
+    # Tile assets. Every declared tile is generated from WinFlow's own icon so
+    # certification never falls back to a generic/default product image.
+    Save-ScaledSquareAssets "Square150x150Logo" 150
+    Save-ScaledSquareAssets "Square310x310Logo" 310
+    Save-ScaledWideAssets "Wide310x150Logo" 310 150 120
 }
 finally {
     $sourceBitmap.Dispose()
