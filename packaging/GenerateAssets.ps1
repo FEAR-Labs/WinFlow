@@ -154,6 +154,8 @@ function Save-ScaledSquareAssets {
         [int]$BaseSize
     )
 
+    Save-SquareAsset "$BaseName.png" $BaseSize
+
     $scales = @(
         @{ Scale = 100; Factor = 1.0 },
         @{ Scale = 125; Factor = 1.25 },
@@ -176,6 +178,8 @@ function Save-ScaledWideAssets {
         [int]$BaseIconSize
     )
 
+    Save-WideAsset "$BaseName.png" $BaseWidth $BaseHeight $BaseIconSize
+
     $scales = @(
         @{ Scale = 100; Factor = 1.0 },
         @{ Scale = 125; Factor = 1.25 },
@@ -193,18 +197,16 @@ function Save-ScaledWideAssets {
 }
 
 try {
-    # Package/Store logo. Microsoft Store requires the scale variants.
+    # Keep the unqualified base files because AppxManifest.xml references them
+    # directly. Scale-qualified variants are included for Windows/Store surfaces.
     Save-ScaledSquareAssets "StoreLogo" 50
 
-    # App-list icon and common target-size variants used by Windows shell surfaces.
     Save-ScaledSquareAssets "Square44x44Logo" 44
     foreach ($size in @(16, 24, 32, 48, 256)) {
         Save-SquareAsset "Square44x44Logo.targetsize-$size.png" $size
         Save-SquareAsset "Square44x44Logo.targetsize-$size`_altform-unplated.png" $size
     }
 
-    # Tile assets. Every declared tile is generated from WinFlow's own icon so
-    # certification never falls back to a generic/default product image.
     Save-ScaledSquareAssets "Square150x150Logo" 150
     Save-ScaledSquareAssets "Square310x310Logo" 310
     Save-ScaledWideAssets "Wide310x150Logo" 310 150 120
