@@ -8,7 +8,7 @@
 
 Una utilidad ligera para Windows que funciona en segundo plano y permite controlar la ventana activa con atajos globales.
 
-<a href="https://apps.microsoft.com/detail/9pcfvc2c6t66?hl=es-ES&gl=US"><img src="https://get.microsoft.com/images/es-es%20dark.svg" alt="Descargar desde Microsoft Store" height="52" /></a>
+<a href="https://apps.microsoft.com/detail/9pcfvc2c6t66?hl=es-ES&gl=US"><img src="./assets/icons/Microsoft-Store.svg" alt="Descargar desde Microsoft Store" height="52" /></a>
 
 <img width="800" height="450" alt="WinFlow en acción" src="./assets/gifts/Ordena.gif" />
 
@@ -52,7 +52,7 @@ Haz **clic derecho** sobre el icono para abrir el menú de WinFlow. Desde ahí p
 
 WinFlow está disponible en Microsoft Store:
 
-<a href="https://apps.microsoft.com/detail/9pcfvc2c6t66?hl=es-ES&gl=US"><img src="https://get.microsoft.com/images/es-es%20dark.svg" alt="Descargar desde Microsoft Store" height="52" /></a>
+<a href="https://apps.microsoft.com/detail/9pcfvc2c6t66?hl=es-ES&gl=US"><img src="./assets/icons/Microsoft-Store.svg" alt="Descargar desde Microsoft Store" height="52" /></a>
 
 También puedes ejecutar `WinFlow.exe` para usar la instalación independiente.
 
