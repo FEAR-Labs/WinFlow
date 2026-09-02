@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="54" viewBox="0 0 180 54" role="img" aria-label="Descargar desde Microsoft Store">
+  <rect x="0.5" y="0.5" width="179" height="53" rx="7.5" fill="#111" stroke="#666"/>
+  <g fill="#fff">
+    <rect x="13" y="17" width="8" height="8"/>
+    <rect x="22" y="17" width="8" height="8"/>
+    <rect x="13" y="26" width="8" height="8"/>
+    <rect x="22" y="26" width="8" height="8"/>
+    <text x="40" y="20" font-family="Segoe UI,Arial,sans-serif" font-size="8">DESCÁRGALO DE</text>
+    <text x="40" y="36" font-family="Segoe UI,Arial,sans-serif" font-size="15">Microsoft Store</text>
+  </g>
+</svg>
