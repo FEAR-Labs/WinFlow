@@ -8,6 +8,8 @@
 
 Una utilidad ligera para Windows que funciona en segundo plano y permite controlar la ventana activa con atajos globales.
 
+<a href="https://apps.microsoft.com/detail/9pcfvc2c6t66?hl=es-ES&gl=US"><img src="https://get.microsoft.com/images/es-es%20dark.svg" alt="Descargar desde Microsoft Store" height="52" /></a>
+
 <img width="800" height="450" alt="WinFlow en acción" src="./assets/gifts/Ordena.gif" />
 
 </div>
@@ -48,7 +50,11 @@ Haz **clic derecho** sobre el icono para abrir el menú de WinFlow. Desde ahí p
 
 ## Instalación
 
-Ejecuta `WinFlow.exe`.
+WinFlow está disponible en Microsoft Store:
+
+<a href="https://apps.microsoft.com/detail/9pcfvc2c6t66?hl=es-ES&gl=US"><img src="https://get.microsoft.com/images/es-es%20dark.svg" alt="Descargar desde Microsoft Store" height="52" /></a>
+
+También puedes ejecutar `WinFlow.exe` para usar la instalación independiente.
 
 WinFlow se instala automáticamente en `%LocalAppData%\Programs\WinFlow` y queda configurado para **iniciarse junto con Windows**.
 
@@ -73,4 +79,4 @@ No modifica archivos del sistema ni la configuración de tus monitores. Las vent
 ## Limitaciones
 
 - Algunas aplicaciones o ventanas protegidas pueden impedir que herramientas externas cambien su posición o estado.
-- Microsoft Smart App Control puede bloquear la versión actual de WinFlow o mostrar una advertencia indicando que no se puede verificar el editor. En algunos equipos, iniciar WinFlow mediante **“Ejecutar como administrador”** puede permitir que la aplicación se ejecute, aunque esto depende de la configuración y las políticas de seguridad de Windows. Estamos trabajando en una **versión de WinFlow para Microsoft Store**, con el objetivo de ofrecer una instalación más sencilla y correctamente distribuida a través de Microsoft, reduciendo este tipo de advertencias o bloqueos.
+- Microsoft Smart App Control puede bloquear la versión independiente de WinFlow o mostrar una advertencia indicando que no se puede verificar el editor. Para una instalación distribuida directamente por Microsoft, puedes usar la versión disponible en **Microsoft Store**.
